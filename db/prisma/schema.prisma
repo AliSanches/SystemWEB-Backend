@@ -1,0 +1,253 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model config {
+  id                Int    @id @default(autoincrement())
+  empresa           String @db.Text
+  cnpj              String @default("") @db.TinyText
+  razaoSocial       String @default("") @db.MediumText
+  registroEstadual  String @default("") @db.TinyText
+  registroMunicipal String @default("") @db.TinyText
+  postalCode        String @default("") @db.TinyText
+  state             String @default("") @db.TinyText
+  city              String @default("") @db.TinyText
+  neighborhood      String @default("") @db.TinyText
+  street            String @default("") @db.TinyText
+  buildingNumber    String @default("") @db.TinyText
+}
+
+model user {
+  id          Int          @id @default(autoincrement())
+  createdAt   DateTime     @default(now())
+  updatedAt   DateTime     @default(now()) @updatedAt
+  enabled     Boolean      @default(true)
+  lastLogin   Int?
+  name        String       @db.Text
+  email       String       @unique(map: "user_email_key") @db.VarChar(50)
+  password    String       @db.Text
+  notes       note[]
+  tarefas     tarefa[]
+  permissions permissions?
+
+  google_token        String @default("") @db.MediumText
+  google_refreshToken String @default("") @db.MediumText
+
+  contactOf user[] @relation("contacts")
+  contacts  user[] @relation("contacts")
+
+  receivedMessages message[]      @relation("ReceiverMessages")
+  sentMessages     message[]      @relation("SenderMessages")
+  notifications    notification[]
+}
+
+model message {
+  id         Int      @id @default(autoincrement())
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+  content    String
+  senderId   Int
+  receiverId Int
+  sender     user     @relation("SenderMessages", fields: [senderId], references: [id])
+  receiver   user     @relation("ReceiverMessages", fields: [receiverId], references: [id])
+}
+
+model notification {
+  id      Int     @id @default(autoincrement())
+  read    Boolean @default(false)
+  userId  Int
+  user    user    @relation(fields: [userId], references: [id])
+  content String  @db.Text
+}
+
+model permissions {
+  userId        Int  @unique
+  user          user @relation(fields: [userId], references: [id], onDelete: Cascade)
+  clientes      Int  @default(0)
+  processos     Int  @default(0)
+  servicos      Int  @default(0)
+  usuarios      Int  @default(0)
+  anotacoes     Int  @default(0)
+  configuracoes Int  @default(0)
+  contratos     Int  @default(0)
+  relatorios    Int  @default(0)
+  ged           Int  @default(0)
+}
+
+model customer {
+  id            Int          @id @default(autoincrement())
+  createdAt     DateTime     @default(now())
+  updatedAt     DateTime     @default(now()) @updatedAt
+  name          String       @db.Text
+  motherName    String       @db.Text
+  cpf           String       @db.Text
+  rg            String       @db.Text
+  rgIssuer      String       @db.Text
+  cep           String       @db.Text
+  uf            String       @db.Text
+  city          String       @db.Text
+  neighborhood  String       @db.Text
+  street        String       @db.Text
+  mail          String       @db.Text
+  phone         String       @db.Text
+  birthplace    String       @db.Text
+  profession    String       @db.Text
+  civil         String       @db.VarChar(1)
+  customerSince DateTime
+  gender        String       @db.VarChar(1)
+  birthdate     DateTime
+  serie         String       @db.Text
+  ctps          String       @db.Text
+  numberFolder  String       @db.Text
+  pis           String       @db.Text
+  responsibleFolder String   @db.Text
+  smartPhone        String   @db.Text
+  statusCustomer    String   @db.VarChar(15)
+  origin       String        @db.VarChar(15)
+  stateLife    String        @db.VarChar(3)
+  education    String        @db.Text
+  payment      Boolean
+  passwordINSS String        @db.Text
+  imageProfile String        @db.Text
+  employments   employment[]
+  processes     process[]
+  attachments   attachment[]
+
+}
+
+model employment {
+  id                  Int      @id @default(autoincrement())
+  createdAt           DateTime @default(now())
+  updatedAt           DateTime @default(now()) @updatedAt
+  company             String?  @db.Text
+  position            String?  @db.Text
+  startDate           DateTime
+  endDate             DateTime
+  durationYears       Int      @default(0)
+  durationMonths      Int      @default(0)
+  durationDays        Int      @default(0)
+  periodIsSpecial     Boolean  @default(false)
+  considerGracePeriod Boolean  @default(false)
+  gracePeriodMonths   Int      @default(0)
+  customer            customer @relation(fields: [customerId], references: [id], onDelete: Cascade)
+  customerId          Int
+}
+
+model service {
+  id        Int       @id @default(autoincrement())
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @default(now()) @updatedAt
+  name      String    @db.Text
+  enabled   Boolean   @default(true)
+  processes process[]
+}
+
+model process {
+  id         Int       @id @default(autoincrement())
+  createdAt  DateTime  @default(now())
+  updatedAt  DateTime  @default(now()) @updatedAt
+  name       String    @db.Text
+  startDate  DateTime  @default(now())
+  endDate    DateTime?
+  customer   customer  @relation(fields: [customerId], references: [id])
+  customerId Int
+  serviceId  Int
+  service    service   @relation(fields: [serviceId], references: [id])
+  notes      note[]
+  active     Boolean   @default(true)
+}
+
+model note {
+  id        Int      @id @default(autoincrement())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @default(now()) @updatedAt
+  title     String   @default("Início do processo") @db.TinyText
+  text      String?  @db.Text
+  process   process  @relation(fields: [processId], references: [id], onDelete: Cascade)
+  processId Int
+  userId    Int
+  user      user     @relation(fields: [userId], references: [id])
+}
+
+model template_contrato {
+  id        Int      @id @default(autoincrement())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @default(now()) @updatedAt
+  titulo    String   @db.Text
+  texto     String   @db.MediumText
+}
+
+model anotacao_categoria {
+  id                      Int                   @id @default(autoincrement())
+  createdAt               DateTime              @default(now())
+  updatedAt               DateTime              @default(now()) @updatedAt
+  titulo                  String?               @db.Text
+  descricao               String?               @db.MediumText
+  anotacoes_subcategoria  anotacao_subcategoria[]
+  anotacoes               anotacao[]
+}
+
+model anotacao_subcategoria {
+  id              Int                   @id @default(autoincrement())
+  createAt        DateTime              @default(now())
+  updateAt        DateTime              @default(now())
+  categoria       anotacao_categoria    @relation(fields: [categoriaId], references: [id])
+  categoriaId     Int
+  titulo          String?               @db.Text
+  anotacao        anotacao[]
+}
+
+model anotacao {
+  id              Int                   @id @default(autoincrement())
+  createdAt       DateTime              @default(now())
+  updatedAt       DateTime              @default(now()) @updatedAt
+  titulo          String                @db.Text
+  categoria       anotacao_categoria    @relation(fields: [categoriaId], references: [id])
+  categoriaId     Int
+  subcategoria    anotacao_subcategoria @relation(fields: [subcategoriaId], references: [id])
+  subcategoriaId  Int
+  texto           String                @db.MediumText
+}
+
+model tarefa {
+  id        Int      @id @default(autoincrement())
+  idUsuario Int
+  usuario   user     @relation(fields: [idUsuario], references: [id])
+  createdAt DateTime @default(now())
+  updatedAt DateTime @default(now()) @updatedAt
+  titulo    String   @db.Text
+  texto     String   @db.Text
+  data      DateTime
+}
+
+model attachment {
+  id            Int       @id @default(autoincrement())
+  original_name String    @db.Text
+  name          String    @db.Text
+  description   String    @default("") @db.TinyText
+  customer      customer? @relation(fields: [customerId], references: [id])
+  customerId    Int?
+}
+
+model ged_categoria {
+  id              Int      @id @default(autoincrement())
+  titulo          String   @db.Text
+  ged             ged[]
+}
+
+model ged {
+  id                 Int      @id @default(autoincrement())
+  description        String   @default("") @db.TinyText
+  name               String   @db.Text
+  original_name      String   @db.Text
+  ged_categoria      ged_categoria? @relation(fields: [ged_categoriaId], references: [id])
+  ged_categoriaId    Int?
+}

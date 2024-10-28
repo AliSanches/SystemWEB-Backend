@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <style>
+            .bg-color-1 {
+                background-color: #dedede;
+            }
+            .bg-color-2 {
+                background-color: #fff;
+            }
+        </style>
+    </head>
+
+    <body style="display: flex; flex-direction: column">
+        <img
+            src="http://localhost:5173/src/assets/Logo.png"
+            style="height: auto; width: 100px; margin: 20px 0 50px 8px"
+        />
+        <table id="customerTable" style="border-top: 1px solid black; border-collapse: collapse; font-size: 12px">
+            <thead>
+                <tr>
+                    <th style="text-align: left; padding: 5px 0 5px 5px">Nome</th>
+                    <th style="text-align: left; padding: 5px 0 5px 5px">Gênero</th>
+                    <th style="text-align: left; padding: 5px 0 5px 5px">Data de nascimento</th>
+                </tr>
+                {{#each this}}
+            </thead>
+            <tbody>
+                <tr>
+                    <td style="padding: 5px; text-align: left">{{name}}</td>
+                    <td style="padding: 5px; text-align: left">{{gender}}</td>
+                    <td style="padding: 5px; text-align: left">{{birthdate}}</td>
+                </tr>
+                <tr>
+                    <td style="padding: 5px; text-align: left">{{name}}</td>
+                    <td style="padding: 5px; text-align: left">{{gender}}</td>
+                    <td style="padding: 5px; text-align: left">{{birthdate}}</td>
+                </tr>
+                <tr>
+                    <td style="padding: 5px; text-align: left">{{name}}</td>
+                    <td style="padding: 5px; text-align: left">{{gender}}</td>
+                    <td style="padding: 5px; text-align: left">{{birthdate}}</td>
+                </tr>
+                <tr>
+                    <td style="padding: 5px; text-align: left">{{name}}</td>
+                    <td style="padding: 5px; text-align: left">{{gender}}</td>
+                    <td style="padding: 5px; text-align: left">{{birthdate}}</td>
+                </tr>
+                <tr>
+                    <td style="padding: 5px; text-align: left">{{name}}</td>
+                    <td style="padding: 5px; text-align: left">{{gender}}</td>
+                    <td style="padding: 5px; text-align: left">{{birthdate}}</td>
+                </tr>
+                <tr>
+                    <td style="padding: 5px; text-align: left">{{name}}</td>
+                    <td style="padding: 5px; text-align: left">{{gender}}</td>
+                    <td style="padding: 5px; text-align: left">{{birthdate}}</td>
+                </tr>
+                <tr>
+                    <td style="padding: 5px; text-align: left">{{name}}</td>
+                    <td style="padding: 5px; text-align: left">{{gender}}</td>
+                    <td style="padding: 5px; text-align: left">{{birthdate}}</td>
+                </tr>
+                <tr>
+                    <td style="padding: 5px; text-align: left">{{name}}</td>
+                    <td style="padding: 5px; text-align: left">{{gender}}</td>
+                    <td style="padding: 5px; text-align: left">{{birthdate}}</td>
+                </tr>
+                <tr>
+                    <td style="padding: 5px; text-align: left">{{name}}</td>
+                    <td style="padding: 5px; text-align: left">{{gender}}</td>
+                    <td style="padding: 5px; text-align: left">{{birthdate}}</td>
+                </tr>
+                <tr>
+                    <td style="padding: 5px; text-align: left">{{name}}</td>
+                    <td style="padding: 5px; text-align: left">{{gender}}</td>
+                    <td style="padding: 5px; text-align: left">{{birthdate}}</td>
+                </tr>
+                <tr>
+                    <td style="padding: 5px; text-align: left">{{name}}</td>
+                    <td style="padding: 5px; text-align: left">{{gender}}</td>
+                    <td style="padding: 5px; text-align: left">{{birthdate}}</td>
+                </tr>
+                {{/each}}
+            </tbody>
+        </table>
+
+        <script>
+            document.addEventListener("DOMContentLoaded", () => {
+                const rows = document.querySelectorAll("#customerTable tbody tr");
+                rows.forEach((row, index) => {
+                    row.classList.add(index % 2 === 0 ? "bg-color-1" : "bg-color-2");
+                });
+            });
+        </script>
+    </body>
+</html>
+

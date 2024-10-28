@@ -1,0 +1,49 @@
+services:
+  db:
+    image: mariadb
+    restart: always
+    environment:
+      MARIADB_ROOT_PASSWORD: 123
+    ports:
+      - target: 3306
+        published: 3306
+        protocol: tcp
+        mode: ingress
+    volumes:
+      - /volumes/mariadb:/var/lib/mysql
+
+  backend:
+    image: swarm1.devops.corp.br:5000/sigprev-backend
+    build: https://${GITHUB_TOKEN}:${GITHUB_TOKEN}@github.com/DevOps-Tecnologia/sigprev-backend.git
+    restart: always
+    ports:
+      - target: 4000
+        published: 4000
+        protocol: tcp
+        mode: ingress
+    deploy:
+      replicas: 1
+      resources:
+        limits:
+          cpus: "0.5"
+          memory: 256M
+      restart_policy:
+        condition: on-failure
+
+  frontend:
+    image: swarm1.devops.corp.br:5000/sigprev-frontend
+    build: https://${GITHUB_TOKEN}:${GITHUB_TOKEN}@github.com/DevOps-Tecnologia/sigprev-frontend.git
+    restart: always
+    ports:
+      - target: 80
+        published: 3000
+        protocol: tcp
+        mode: ingress
+    deploy:
+      replicas: 1
+      resources:
+        limits:
+          cpus: "0.1"
+          memory: 50M
+      restart_policy:
+        condition: on-failure

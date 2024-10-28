@@ -1,0 +1,8 @@
+node_modules
+coverage
+build
+babel
+.idea
+# Keep environment variables out of version control
+.env
+.env.test
