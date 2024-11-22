@@ -23,7 +23,7 @@ export class RelatorioClientes {
         const browser = await puppeteer.launch({ args: ["--no-sandbox"] });
         const page = await browser.newPage();
 
-        let html = fs.readFileSync("app/relatorios/relatorioCliente.html", "utf-8");
+        let html = fs.readFileSync("app/relatorios/relatorioClienteNovo.html", "utf-8");
         const template = Handlebars.compile(html);
 
         let data = template(clientes);
@@ -34,7 +34,7 @@ export class RelatorioClientes {
         await page.emulateMediaType("screen");
 
         const pdf = await page.pdf({
-            margin: { top: "16px", right: "30px", bottom: "60px", left: "30px" },
+            margin: { top: "100px", right: "0", bottom: "60px", left: "0" },
             format: "A4",
             printBackground: true,
             headerTemplate: headerTemplate,
