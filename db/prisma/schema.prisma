@@ -45,6 +45,8 @@ model user {
   receivedMessages message[]      @relation("ReceiverMessages")
   sentMessages     message[]      @relation("SenderMessages")
   notifications    notification[]
+  chamadoReceptor  chamados[]     @relation("ReceiverChamado")
+  chamadosRemetente chamados[]     @relation("SenderChamado")
 }
 
 model message {
@@ -78,6 +80,7 @@ model permissions {
   contratos     Int  @default(0)
   relatorios    Int  @default(0)
   ged           Int  @default(0)
+  chamados      Int  @default(0)
 }
 
 model customer {
@@ -248,4 +251,15 @@ model ged {
   original_name      String   @db.Text
   ged_categoria      ged_categoria? @relation(fields: [ged_categoriaId], references: [id])
   ged_categoriaId    Int?
+}
+
+model chamados {
+  id                      Int        @id @default(autoincrement())
+  senderId                Int
+  receiverId              Int
+  sender                  user       @relation("ReceiverChamado", fields: [senderId], references: [id])
+  receiver                user       @relation("SenderChamado", fields: [receiverId], references: [id])            
+  title                   String     @db.Text
+  description             String     @db.Text
+  data                    DateTime   @default(now())
 }

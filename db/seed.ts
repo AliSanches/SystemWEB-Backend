@@ -25,6 +25,7 @@ export const seed = async () => {
                     contratos: 2,
                     relatorios: 1,
                     ged: 2,
+                    chamados: 2,
                 },
             },
         },
